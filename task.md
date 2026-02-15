@@ -3,7 +3,30 @@
 ## Project Overview
 Build a Chrome browser extension named "Chrome Copilot" in the current directory `~/workarea/code/chrome-copilot`.
 
-## Project Directory Structure
+## Core Functionality
+The extension should enable users to:
+1. Select text in Chrome browser
+2. Right-click to access context menu
+3. See "Chrome Copilot" option in the context menu
+4. Click the option to process the selected text
+5. Use configured LLM model and prompt to explain/analyze the selected text
+
+## Technology Stack
+
+### Core Technologies
+- **Chrome Extension APIs**: Manifest V3, Service Workers, Context Menus, Storage API
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+)
+- **Build Tools**: Simple shell script build, optional webpack for production
+- **LLM Integration**: REST API calls to OpenAI/Anthropic/etc. endpoints
+- **Storage**: Chrome Storage API (sync/local), IndexedDB for larger data
+
+### Development Tools
+- **Testing**: Chrome DevTools, Extension Developer Mode, Jest
+- **Version Control**: Git
+- **Code Quality**: ESLint, Prettier
+- **Documentation**: JSDoc comments, Markdown docs
+
+## Modular Architecture
 
 ```
 chrome-copilot/
@@ -76,6 +99,137 @@ chrome-copilot/
 ├── package.json                     # Build Configuration
 ├── README.md
 └── task.md                          # This file
+```
+
+### Module 1: Extension Core (Foundation)
+**Purpose**: Basic extension setup and manifest configuration
+**Location**: Root level and `src/core/`
+
+**Files**:
+- `manifest.json` - Extension manifest with V3 specifications
+- `icons/` - Extension icons (16x16, 48x48, 128x128 PNG)
+- `_locales/` - Internationalization support (optional)
+- `src/core/constants.js` - Application constants and defaults
+
+**Key Functions**:
+- Define extension permissions
+- Configure service worker 
+- Register content scripts
+- Set up extension icons
+
+### Module 2: Context Menu System
+**Purpose**: Handle text selection and context menu interactions
+**Location**: `src/background/` and `src/content/`
+
+**Files**:
+- `src/background/background.js` - Service worker for context menu registration
+- `src/background/context-menu.js` - Context menu specific logic
+- `src/content/content.js` - Content script for text selection detection
+
+**Key Functions**:
+- Register context menu item on extension install
+- Show menu only when text is selected
+- Capture selected text on menu click
+- Communicate between content script and background
+
+### Module 3: Configuration Management
+**Purpose**: Manage user settings and preferences
+**Location**: `src/config/`
+
+**Files**:
+- `src/config/options.html` - Settings page UI
+- `src/config/options.js` - Settings page logic
+- `src/config/storage.js` - Data storage utilities
+
+**Key Functions**:
+- API key management (secure storage)
+- LLM endpoint configuration
+- Model selection
+- Prompt template management
+- Theme preferences
+
+### Module 4: LLM Integration Layer
+**Purpose**: Communicate with LLM APIs
+**Location**: `src/api/`
+
+**Files**:
+- `src/api/api.js` - LLM API communication layer
+- `src/api/prompts.js` - Prompt template management
+- `src/api/providers/openai.js` - OpenAI provider implementation
+- `src/api/providers/anthropic.js` - Anthropic provider implementation
+- `src/api/providers/custom.js` - Custom API provider
+
+**Key Functions**:
+- Make authenticated API requests
+- Handle different LLM providers (OpenAI, Anthropic, etc.)
+- Manage prompt templates
+- Process and sanitize responses
+- Error handling and retry logic
+
+### Module 5: User Interface Components
+**Purpose**: Provide user-facing interfaces
+**Location**: `src/ui/`
+
+**Files**:
+- `src/ui/popup.html` - Extension popup UI
+- `src/ui/popup.js` - Popup interaction logic
+- `src/ui/components/status-indicator.js` - Status indicator component
+- `src/ui/components/history-list.js` - History list component
+- `src/ui/components/quick-settings.js` - Quick settings component
+- `src/ui/themes/light.css` - Light theme styles
+- `src/ui/themes/dark.css` - Dark theme styles
+
+**Key Functions**:
+- Quick configuration via popup
+- Result display interface
+- Loading states and progress indicators
+- Error message display
+- History view of previous explanations
+
+### Module 6: Result Display System
+**Purpose**: Show LLM responses to users
+**Location**: `src/display/`
+
+**Files**:
+- `src/display/display.js` - Result rendering logic
+- `src/display/notification.js` - Desktop notification system (optional)
+- `src/display/sidepanel.html` + `src/display/sidepanel.js` - Side panel interface (optional)
+
+**Key Functions**:
+- Format LLM responses (markdown support)
+- Copy to clipboard functionality
+- Save results locally
+- Share results (optional)
+
+### Module 7: Utility & Helper Functions
+**Purpose**: Shared utilities across modules
+**Location**: `src/utils/`
+
+**Files**:
+- `src/utils/validation.js` - Input validation utilities
+- `src/utils/sanitize.js` - Text sanitization
+- `src/utils/logger.js` - Logging system (development only)
+- `src/utils/debounce.js` - Debounce utility
+
+**Key Functions**:
+- Text sanitization
+- URL validation
+- API response parsing
+- Error formatting
+
+## Module Dependencies
+```
+Extension Core (root + src/core/)
+    ↓
+Context Menu System (src/background/ + src/content/) → Configuration Management (src/config/)
+    ↓                                                    ↓
+LLM Integration Layer (src/api/) ←───────────────────────┘
+    ↓
+Result Display System (src/display/)
+    ↑
+User Interface Components (src/ui/)
+    ↑
+Utility Functions (src/utils/)
 ```
 
 ## Module Implementation Locations
@@ -208,153 +362,6 @@ Update `manifest.json` to reflect the new directory structure:
 }
 ```
 
-## Technology Stack
-
-### Core Technologies
-- **Chrome Extension APIs**: Manifest V3, Service Workers, Context Menus, Storage API
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+)
-- **Build Tools**: Simple shell script build, optional webpack for production
-- **LLM Integration**: REST API calls to OpenAI/Anthropic/etc. endpoints
-- **Storage**: Chrome Storage API (sync/local), IndexedDB for larger data
-
-### Development Tools
-- **Testing**: Chrome DevTools, Extension Developer Mode, Jest
-- **Version Control**: Git
-- **Code Quality**: ESLint, Prettier
-- **Documentation**: JSDoc comments, Markdown docs
-
-## Modular Architecture
-
-### Module 1: Extension Core (Foundation)
-**Purpose**: Basic extension setup and manifest configuration
-**Location**: Root level and `src/core/`
-
-**Files**:
-- `manifest.json` - Extension manifest with V3 specifications
-- `icons/` - Extension icons (16x16, 48x48, 128x128 PNG)
-- `_locales/` - Internationalization support (optional)
-- `src/core/constants.js` - Application constants and defaults
-
-**Key Functions**:
-- Define extension permissions
-- Configure service worker
-- Register content scripts
-- Set up extension icons
-
-### Module 2: Context Menu System
-**Purpose**: Handle text selection and context menu interactions
-**Location**: `src/background/` and `src/content/`
-
-**Files**:
-- `src/background/background.js` - Service worker for context menu registration
-- `src/background/context-menu.js` - Context menu specific logic
-- `src/content/content.js` - Content script for text selection detection
-
-**Key Functions**:
-- Register context menu item on extension install
-- Show menu only when text is selected
-- Capture selected text on menu click
-- Communicate between content script and background
-
-### Module 3: Configuration Management
-**Purpose**: Manage user settings and preferences
-**Location**: `src/config/`
-
-**Files**:
-- `src/config/options.html` - Settings page UI
-- `src/config/options.js` - Settings page logic
-- `src/config/storage.js` - Data storage utilities
-
-**Key Functions**:
-- API key management (secure storage)
-- LLM endpoint configuration
-- Model selection
-- Prompt template management
-- Theme preferences
-
-### Module 4: LLM Integration Layer
-**Purpose**: Communicate with LLM APIs
-**Location**: `src/api/`
-
-**Files**:
-- `src/api/api.js` - LLM API communication layer
-- `src/api/prompts.js` - Prompt template management
-- `src/api/providers/openai.js` - OpenAI provider implementation
-- `src/api/providers/anthropic.js` - Anthropic provider implementation
-- `src/api/providers/custom.js` - Custom API provider
-
-**Key Functions**:
-- Make authenticated API requests
-- Handle different LLM providers (OpenAI, Anthropic, etc.)
-- Manage prompt templates
-- Process and sanitize responses
-- Error handling and retry logic
-
-### Module 5: User Interface Components
-**Purpose**: Provide user-facing interfaces
-**Location**: `src/ui/`
-
-**Files**:
-- `src/ui/popup.html` - Extension popup UI
-- `src/ui/popup.js` - Popup interaction logic
-- `src/ui/components/status-indicator.js` - Status indicator component
-- `src/ui/components/history-list.js` - History list component
-- `src/ui/components/quick-settings.js` - Quick settings component
-- `src/ui/themes/light.css` - Light theme styles
-- `src/ui/themes/dark.css` - Dark theme styles
-
-**Key Functions**:
-- Quick configuration via popup
-- Result display interface
-- Loading states and progress indicators
-- Error message display
-- History view of previous explanations
-
-### Module 6: Result Display System
-**Purpose**: Show LLM responses to users
-**Location**: `src/display/`
-
-**Files**:
-- `src/display/display.js` - Result rendering logic
-- `src/display/notification.js` - Desktop notification system (optional)
-- `src/display/sidepanel.html` + `src/display/sidepanel.js` - Side panel interface (optional)
-
-**Key Functions**:
-- Format LLM responses (markdown support)
-- Copy to clipboard functionality
-- Save results locally
-- Share results (optional)
-
-### Module 7: Utility & Helper Functions
-**Purpose**: Shared utilities across modules
-**Location**: `src/utils/`
-
-**Files**:
-- `src/utils/validation.js` - Input validation utilities
-- `src/utils/sanitize.js` - Text sanitization
-- `src/utils/logger.js` - Logging system (development only)
-- `src/utils/debounce.js` - Debounce utility
-
-**Key Functions**:
-- Text sanitization
-- URL validation
-- API response parsing
-- Error formatting
-
-## Module Dependencies
-```
-Extension Core (root + src/core/)
-    ↓
-Context Menu System (src/background/ + src/content/) → Configuration Management (src/config/)
-    ↓                                                    ↓
-LLM Integration Layer (src/api/) ←───────────────────────┘
-    ↓
-Result Display System (src/display/)
-    ↑
-User Interface Components (src/ui/)
-    ↑
-Utility Functions (src/utils/)
-```
 
 ## Implementation Priority
 
