@@ -1,0 +1,72 @@
+/* 
+ * Chrome Copilot - Light Theme
+ * 
+ * Light theme specific styles. Most light theme styling is handled
+ * by CSS variables in main.css. This file contains light-specific
+ * overrides if needed.
+ */
+
+:root[data-theme="light"] {
+  /* Light theme specific overrides */
+  
+  /* Enhanced contrast for light theme */
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #6b7280;
+  
+  /* Softer shadows for light theme */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  
+  /* Lighter backgrounds */
+  --color-surface: #ffffff;
+  --color-surface-dark: #f9fafb;
+  --color-surface-darker: #f3f4f6;
+  
+  /* Softer borders */
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  --color-border-dark: #d1d5db;
+}
+
+/* Light theme specific component styles */
+[data-theme="light"] .card {
+  border: 1px solid var(--color-border);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-dark) 100%);
+}
+
+[data-theme="light"] .history-item:hover {
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+[data-theme="light"] .btn-text:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .status-indicator {
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+
+[data-theme="light"] .form-input:focus,
+[data-theme="light"] .form-select:focus,
+[data-theme="light"] .form-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+[data-theme="light"] .markdown-content pre,
+[data-theme="light"] .markdown-content code {
+  background-color: var(--color-surface-dark);
+  border-color: var(--color-border);
+}
+
+[data-theme="light"] .markdown-content blockquote {
+  background-color: var(--color-surface-dark);
+  border-left-color: var(--color-primary);
+}
+
+/* Light theme transitions */
+[data-theme="light"] * {
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}

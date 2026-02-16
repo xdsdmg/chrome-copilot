@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Copilot Settings</title>
+  <link rel="stylesheet" href="../styles/options.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <style>
+    :root {
+      --options-width: 800px;
+      --sidebar-width: 200px;
+    }
+    
+    body {
+      width: var(--options-width);
+      margin: 0 auto;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #f5f5f5;
+    }
+    
+    .settings-container {
+      display: flex;
+      gap: 30px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      min-height: 600px;
+    }
+    
+    .sidebar {
+      width: var(--sidebar-width);
+      background: #2c3e50;
+      color: white;
+      padding: 30px 20px;
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 30px;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .status-message {
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    
+    .status-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .status-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="logo-section">
+        <h1 class="logo">
+          <span class="logo-icon">🤖</span>
+          Chrome Copilot
+        </h1>
+        <p class="logo-subtitle">AI Text Explanation</p>
+      </div>
+      
+      <ul class="nav-menu">
+        <li>
+          <a href="#llm-config" class="nav-link active" data-section="llm">
+            <span class="nav-icon">🔑</span>
+            LLM Configuration
+          </a>
+        </li>
+        <li>
+          <a href="#prompt-templates" class="nav-link" data-section="prompts">
+            <span class="nav-icon">📝</span>
+            Prompt Templates
+          </a>
+        </li>
+        <li>
+          <a href="#display-settings" class="nav-link" data-section="display">
+            <span class="nav-icon">🎨</span>
+            Display Settings
+          </a>
+        </li>
+        <li>
+          <a href="#data-management" class="nav-link" data-section="data">
+            <span class="nav-icon">💾</span>
+            Data Management
+          </a>
+        </li>
+        <li>
+          <a href="#about" class="nav-link" data-section="about">
+            <span class="nav-icon">ℹ️</span>
+            About
+          </a>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="version-info">
+          Version 1.0.0
+        </div>
+        <div class="storage-info" id="storageInfo">
+          Loading storage usage...
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Status Message Area -->
+      <div id="statusMessage" class="status-message hidden"></div>
+
+      <!-- LLM Configuration Section -->
+      <section id="llmSection" class="settings-section">
+        <h2 class="section-title">LLM Configuration</h2>
+        <p class="section-description">
+          Configure your AI provider settings and API keys. Your API keys are stored locally and never sent to our servers.
+        </p>
+        
+        <div class="form-grid">
+          <!-- Provider Selection -->
+          <div class="form-group">
+            <label for="provider" class="form-label">
+              <span class="label-icon">🏢</span>
+              LLM Provider
+            </label>
+            <select id="provider" class="form-select">
+              <option value="openai">OpenAI</option>
+              <option value="anthropic">Anthropic</option>
+              <option value="custom">Custom API</option>
+            </select>
+            <p class="form-hint">
+              Choose your preferred AI provider. Each has different pricing and capabilities.
+            </p>
+          </div>
+
+          <!-- API Key -->
+          <div class="form-group">
+            <label for="apiKey" class="form-label">
+              <span class="label-icon">🔐</span>
+              API Key
+            </label>
+            <div class="input-with-button">
+              <input type="password" id="apiKey" class="form-input" 
+                     placeholder="Enter your API key" autocomplete="off">
+              <button type="button" id="toggleApiKey" class="btn btn-small btn-secondary">
+                👁️ Show
+              </button>
+            </div>
+            <p class="form-hint">
+              Your API key is stored securely in Chrome's local storage. 
+              <a href="#" id="apiKeyHelp" class="help-link">Where do I find this?</a>
+            </p>
+          </div>
+
+          <!-- Model Selection -->
+          <div class="form-group">
+            <label for="model" class="form-label">
+              <span class="label-icon">🧠</span>
+              Model
+            </label>
+            <select id="model" class="form-select">
+              <option value="">Select a model</option>
+            </select>
+            <p class="form-hint" id="modelHint">
+              Different models have different capabilities and costs.
+            </p>
+          </div>
+
+          <!-- API Endpoint (for custom provider) -->
+          <div class="form-group hidden" id="endpointGroup">
+            <label for="endpoint" class="form-label">
+              <span class="label-icon">🌐</span>
+              API Endpoint
+            </label>
+            <input type="url" id="endpoint" class="form-input" 
+                   placeholder="https://api.example.com/v1/chat/completions">
+            <p class="form-hint">
+              Full URL to your custom API endpoint.
+            </p>
+          </div>
+
+          <!-- Test Connection -->
+          <div class="form-group">
+            <div class="test-connection">
+              <button type="button" id="testConnection" class="btn btn-primary">
+                <span class="btn-icon">🔍</span>
+                Test Connection
+              </button>
+              <div id="testResult" class="test-result hidden">
+                <!-- Test result will be shown here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Prompt Templates Section -->
+      <section id="promptsSection" class="settings-section hidden">
+        <h2 class="section-title">Prompt Templates</h2>
+        <p class="section-description">
+          Customize how Chrome Copilot interacts with the AI. Use variables like <code>{text}</code> and <code>{context}</code> to insert dynamic content.
+        </p>
+        
+        <!-- Default Prompt -->
+        <div class="form-group">
+          <label for="defaultPrompt" class="form-label">
+            <span class="label-icon">📄</span>
+            Default Prompt
+          </label>
+          <textarea id="defaultPrompt" class="form-textarea" rows="6" 
+                    placeholder="Explain the following text in simple terms: {text}&#10;&#10;Context:&#10;- Source: {context.title}&#10;- URL: {context.url}&#10;- Time: {context.timestamp}"></textarea>
+          <p class="form-hint">
+            This prompt will be used by default. Available variables: <code>{text}</code>, <code>{context.title}</code>, <code>{context.url}</code>, <code>{context.timestamp}</code>
+          </p>
+        </div>
+
+        <!-- Custom Prompts -->
+        <div class="form-group">
+          <label class="form-label">
+            <span class="label-icon">✨</span>
+            Custom Prompts
+          </label>
+          <div class="prompts-editor">
+            <div class="prompts-header">
+              <h3>Your Custom Templates</h3>
+              <button type="button" id="addPrompt" class="btn btn-small btn-secondary">
+                <span class="btn-icon">➕</span> Add Template
+              </button>
+            </div>
+            <div id="customPromptsContainer" class="prompts-container">
+              <!-- Custom prompts will be dynamically added here -->
+              <div class="empty-prompts">
+                <p>No custom prompts yet. Add your first template!</p>
+              </div>
+            </div>
+            <p class="form-hint">
+              Create custom prompt templates for different use cases. These will appear in the quick settings dropdown.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Display Settings Section -->
+      <section id="displaySection" class="settings-section hidden">
+        <h2 class="section-title">Display Settings</h2>
+        <p class="section-description">
+          Customize how Chrome Copilot displays results and interacts with you.
+        </p>
+        
+        <div class="form-grid">
+          <!-- Theme -->
+          <div class="form-group">
+            <label for="theme" class="form-label">
+              <span class="label-icon">🎨</span>
+              Theme
+            </label>
+            <select id="theme" class="form-select">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="system">System Default</option>
+            </select>
+            <p class="form-hint">
+              Choose your preferred color theme.
+            </p>
+          </div>
+
+          <!-- Display Location -->
+          <div class="form-group">
+            <label for="displayLocation" class="form-label">
+              <span class="label-icon">📱</span>
+              Result Display
+            </label>
+            <select id="displayLocation" class="form-select">
+              <option value="popup">Popup Window</option>
+              <option value="sidepanel">Side Panel</option>
+              <option value="notification">Desktop Notification</option>
+            </select>
+            <p class="form-hint">
+              Where to show AI responses.
+            </p>
+          </div>
+
+          <!-- Behavior Settings -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">⚡</span>
+              Behavior
+            </label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="autoCopy" class="form-checkbox">
+                <span class="checkbox-text">Auto-copy results to clipboard</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="saveHistory" class="form-checkbox" checked>
+                <span class="checkbox-text">Save query history</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="showNotifications" class="form-checkbox">
+                <span class="checkbox-text">Show desktop notifications</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- History Limits -->
+          <div class="form-group">
+            <label for="maxHistoryItems" class="form-label">
+              <span class="label-icon">📊</span>
+              History Limit
+            </label>
+            <div class="range-input">
+              <input type="range" id="maxHistoryItems" class="form-range" 
+                     min="10" max="200" step="10" value="50">
+              <div class="range-value">
+                <span id="historyValue">50</span> items
+              </div>
+            </div>
+            <p class="form-hint">
+              Maximum number of queries to keep in history.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Data Management Section -->
+      <section id="dataSection" class="settings-section hidden">
+        <h2 class="section-title">Data Management</h2>
+        <p class="section-description">
+          Manage your extension data, including history, configuration, and backups.
+        </p>
+        
+        <div class="data-actions">
+          <div class="data-action">
+            <h3>Export Data</h3>
+            <p>Download all your settings and history as a backup file.</p>
+            <button type="button" id="exportData" class="btn btn-secondary">
+              <span class="btn-icon">💾</span>
+              Export All Data
+            </button>
+          </div>
+          
+          <div class="data-action">
+            <h3>Import Data</h3>
+            <p>Restore from a previously exported backup file.</p>
+            <div class="import-controls">
+              <input type="file" id="importFile" class="form-file" accept=".json">
+              <button type="button" id="importData" class="btn btn-secondary" disabled>
+                <span class="btn-icon">📂</span>
+                Import Data
+              </button>
+            </div>
+          </div>
+          
+          <div class="data-action danger-zone">
+            <h3>Danger Zone</h3>
+            <p>Permanently delete your data. This action cannot be undone.</p>
+            <div class="danger-actions">
+              <button type="button" id="clearHistoryBtn" class="btn btn-danger">
+                <span class="btn-icon">🗑️</span>
+                Clear History
+              </button>
+              <button type="button" id="clearAllData" class="btn btn-danger">
+                <span class="btn-icon">⚠️</span>
+                Clear All Data
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="aboutSection" class="settings-section hidden">
+        <h2 class="section-title">About Chrome Copilot</h2>
+        
+        <div class="about-content">
+          <div class="about-header">
+            <div class="about-logo">🤖</div>
+            <div class="about-info">
+              <h1>Chrome Copilot</h1>
+              <p class="version">Version 1.0.0</p>
+              <p class="tagline">AI-powered text explanation tool</p>
+            </div>
+          </div>
+          
+          <div class="about-description">
+            <p>
+              Chrome Copilot helps you understand and analyze text on any webpage. 
+              Simply select text, right-click, and choose "Chrome Copilot" to get 
+              AI-generated explanations, summaries, translations, and more.
+            </p>
+          </div>
+          
+          <div class="about-links">
+            <a href="#" id="viewDocumentation" class="about-link">
+              <span class="link-icon">📚</span>
+              Documentation
+            </a>
+            <a href="#" id="reportBug" class="about-link">
+              <span class="link-icon">🐛</span>
+              Report a Bug
+            </a>
+            <a href="#" id="featureRequest" class="about-link">
+              <span class="link-icon">💡</span>
+              Request a Feature
+            </a>
+            <a href="#" id="viewSource" class="about-link">
+              <span class="link-icon">💻</span>
+              View Source Code
+            </a>
+          </div>
+          
+          <div class="about-footer">
+            <p class="copyright">
+              © 2024 Chrome Copilot. All rights reserved.
+            </p>
+            <p class="disclaimer">
+              This extension uses third-party AI services. Your API keys are stored locally 
+              and never transmitted to our servers. Please review the privacy policies of 
+              your chosen AI provider.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button type="button" id="saveBtn" class="btn btn-primary btn-large">
+          <span class="btn-icon">💾</span>
+          Save Settings
+        </button>
+        <button type="button" id="resetBtn" class="btn btn-secondary btn-large">
+          <span class="btn-icon">↻</span>
+          Reset to Defaults
+        </button>
+        <button type="button" id="closeBtn" class="btn btn-text btn-large">
+          Close
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

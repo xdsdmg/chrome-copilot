@@ -1,0 +1,143 @@
+/* 
+ * Chrome Copilot - System Theme
+ * 
+ * Handles system theme detection and applies appropriate theme.
+ * This file works with the system theme option which automatically
+ * switches between light and dark based on OS preference.
+ */
+
+/* System theme detection using prefers-color-scheme media query */
+@media (prefers-color-scheme: light) {
+  :root[data-theme="system"] {
+    /* Light theme variables for system preference */
+    --color-text-primary: #111827;
+    --color-text-secondary: #4b5563;
+    --color-text-tertiary: #6b7280;
+    
+    --color-surface: #ffffff;
+    --color-surface-dark: #f9fafb;
+    --color-surface-darker: #f3f4f6;
+    
+    --color-border: #e5e7eb;
+    --color-border-light: #f3f4f6;
+    --color-border-dark: #d1d5db;
+    
+    /* Use light theme shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  }
+  
+  /* Apply light theme specific styles for system theme */
+  [data-theme="system"] .card {
+    border: 1px solid var(--color-border);
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-dark) 100%);
+  }
+  
+  [data-theme="system"] .history-item:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+  
+  [data-theme="system"] .btn-text:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    /* Dark theme variables for system preference */
+    --color-text-primary: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-tertiary: #9ca3af;
+    
+    --color-surface: #1f2937;
+    --color-surface-dark: #111827;
+    --color-surface-darker: #0f172a;
+    
+    --color-border: #374151;
+    --color-border-light: #4b5563;
+    --color-border-dark: #6b7280;
+    
+    /* Use dark theme shadows */
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    
+    /* Adjusted primary colors for dark theme */
+    --color-primary: #3b82f6;
+    --color-primary-dark: #2563eb;
+    --color-primary-light: #60a5fa;
+  }
+  
+  /* Apply dark theme specific styles for system theme */
+  [data-theme="system"] .card {
+    border: 1px solid var(--color-border);
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-dark) 100%);
+    box-shadow: var(--shadow-md);
+  }
+  
+  [data-theme="system"] .history-item:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+  
+  [data-theme="system"] .btn-text:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Smooth transitions for system theme switching */
+[data-theme="system"] * {
+  transition: background-color 0.3s ease, 
+              border-color 0.3s ease, 
+              color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Listen for system theme changes */
+:root[data-theme="system"] {
+  /* These transitions help prevent flash when system theme changes */
+  transition: color-scheme 0.3s ease;
+}
+
+/* System theme scrollbar styling */
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  [data-theme="system"] ::-webkit-scrollbar-track {
+    background: var(--color-surface-darker);
+  }
+  
+  [data-theme="system"] ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 5px;
+  }
+  
+  [data-theme="system"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-light);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="system"] ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  [data-theme="system"] ::-webkit-scrollbar-track {
+    background: var(--color-surface-dark);
+  }
+  
+  [data-theme="system"] ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+  
+  [data-theme="system"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-dark);
+  }
+}

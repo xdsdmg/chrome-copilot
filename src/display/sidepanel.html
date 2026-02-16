@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Copilot - Side Panel</title>
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/popup.css">
+  <link rel="stylesheet" href="../ui/themes/light.css">
+  <link rel="stylesheet" href="../ui/themes/dark.css">
+  <link rel="stylesheet" href="../ui/themes/system.css">
+  <style>
+    /* Side panel specific styles */
+    :root {
+      --sidepanel-width: 500px;
+      --sidepanel-height: 100vh;
+    }
+    
+    body {
+      width: var(--sidepanel-width);
+      height: var(--sidepanel-height);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: var(--font-family);
+    }
+    
+    .sidepanel-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background-color: var(--color-background);
+      color: var(--color-text-primary);
+    }
+    
+    .sidepanel-header {
+      padding: var(--space-4);
+      border-bottom: 1px solid var(--color-border-light);
+      background-color: var(--color-surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+    }
+    
+    .header-icon {
+      font-size: 1.2em;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+    
+    .sidepanel-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4);
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-border) transparent;
+    }
+    
+    .sidepanel-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .sidepanel-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .sidepanel-content::-webkit-scrollbar-thumb {
+      background-color: var(--color-border);
+      border-radius: var(--radius-full);
+    }
+    
+    .sidepanel-footer {
+      padding: var(--space-4);
+      border-top: 1px solid var(--color-border-light);
+      background-color: var(--color-surface);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+      flex-shrink: 0;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: var(--space-12) var(--space-4);
+      color: var(--color-text-secondary);
+    }
+    
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-4);
+      opacity: 0.5;
+    }
+    
+    .result-history {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+    
+    .history-item-large {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    
+    .history-item-large:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .history-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-border-light);
+    }
+    
+    .history-item-meta {
+      display: flex;
+      gap: var(--space-4);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
+    }
+    
+    .history-item-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+    
+    .history-item-content {
+      font-size: var(--font-size-sm);
+      line-height: 1.6;
+    }
+    
+    .history-item-text {
+      margin-bottom: var(--space-4);
+      padding: var(--space-3);
+      background-color: var(--color-surface-dark);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--color-border);
+    }
+    
+    .history-item-result {
+      margin-top: var(--space-4);
+    }
+    
+    .search-bar {
+      margin-bottom: var(--space-6);
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: var(--space-3) var(--space-4);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text-primary);
+      font-size: var(--font-size-sm);
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .view-toggle {
+      display: flex;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+    }
+    
+    .toggle-btn {
+      flex: 1;
+      padding: var(--space-2) var(--space-4);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .toggle-btn.active {
+      background-color: var(--color-primary);
+      color: var(--color-text-inverse);
+      border-color: var(--color-primary);
+    }
+    
+    @media (max-width: 600px) {
+      :root {
+        --sidepanel-width: 100vw;
+      }
+      
+      .history-item-header {
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+      
+      .history-item-actions {
+        align-self: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidepanel-container">
+    <!-- Header -->
+    <header class="sidepanel-header">
+      <div class="header-title">
+        <span class="header-icon">🤖</span>
+        Chrome Copilot
+      </div>
+      <div class="header-actions">
+        <button id="closePanel" class="btn btn-small btn-text" title="Close panel">
+          <span class="btn-icon">×</span>
+        </button>
+        <button id="refreshPanel" class="btn btn-small btn-secondary" title="Refresh">
+          <span class="btn-icon">↻</span>
+        </button>
+      </div>
+    </header>
+    
+    <!-- Search and Filter -->
+    <div class="sidepanel-content">
+      <div class="search-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search history...">
+      </div>
+      
+      <div class="view-toggle">
+        <button id="viewResults" class="toggle-btn active">Results</button>
+        <button id="viewHistory" class="toggle-btn">History</button>
+        <button id="viewSettings" class="toggle-btn">Settings</button>
+      </div>
+      
+      <!-- Results View -->
+      <div id="resultsView" class="view active">
+        <div class="result-history">
+          <!-- Results will be dynamically inserted here -->
+          <div class="empty-state">
+            <div class="empty-state-icon">📚</div>
+            <h3>No results yet</h3>
+            <p>Select text on any page and use the context menu to get AI explanations.</p>
+            <p>Results will appear here automatically.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- History View -->
+      <div id="historyView" class="view hidden">
+        <div class="result-history" id="historyList">
+          <!-- History items will be dynamically inserted here -->
+          <div class="empty-state">
+            <div class="empty-state-icon">🕒</div>
+            <h3>No history yet</h3>
+            <p>Your query history will appear here.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings View -->
+      <div id="settingsView" class="view hidden">
+        <div class="empty-state">
+          <div class="empty-state-icon">⚙️</div>
+          <h3>Side Panel Settings</h3>
+          <p>Configure side panel behavior and appearance.</p>
+          <button id="openOptions" class="btn btn-primary mt-4">
+            <span class="btn-icon">⚙️</span>
+            Open Extension Settings
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="sidepanel-footer">
+      <div class="footer-content">
+        <div class="footer-info">
+          <span id="resultCount">0 results</span>
+          <span class="separator">•</span>
+          <span id="lastUpdated">Just now</span>
+        </div>
+        <div class="footer-actions">
+          <button id="clearAll" class="btn btn-small btn-text">Clear All</button>
+          <button id="exportData" class="btn btn-small btn-text">Export</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+  
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+/* 
+ * Chrome Copilot - Dark Theme
+ * 
+ * Dark theme specific styles. Most dark theme styling is handled
+ * by CSS variables in main.css. This file contains dark-specific
+ * overrides if needed.
+ */
+
+:root[data-theme="dark"] {
+  /* Dark theme specific overrides */
+  
+  /* Enhanced contrast for dark theme */
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-tertiary: #9ca3af;
+  
+  /* Stronger shadows for dark theme (with light source) */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  
+  /* Darker backgrounds */
+  --color-surface: #1f2937;
+  --color-surface-dark: #111827;
+  --color-surface-darker: #0f172a;
+  
+  /* Darker borders */
+  --color-border: #374151;
+  --color-border-light: #4b5563;
+  --color-border-dark: #6b7280;
+  
+  /* Adjusted primary colors for better visibility on dark */
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-primary-light: #60a5fa;
+}
+
+/* Dark theme specific component styles */
+[data-theme="dark"] .card {
+  border: 1px solid var(--color-border);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-dark) 100%);
+  box-shadow: var(--shadow-md);
+}
+
+[data-theme="dark"] .history-item:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="dark"] .btn-text:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .status-indicator {
+  box-shadow: inset 0 0 0 1px var(--color-border);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-select:focus,
+[data-theme="dark"] .form-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .markdown-content pre,
+[data-theme="dark"] .markdown-content code {
+  background-color: var(--color-surface-darker);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .markdown-content blockquote {
+  background-color: var(--color-surface-darker);
+  border-left-color: var(--color-primary);
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .markdown-content a {
+  color: var(--color-primary-light);
+}
+
+[data-theme="dark"] .markdown-content a:hover {
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .sidebar {
+  background: linear-gradient(135deg, var(--color-surface-darker) 0%, #1e293b 100%);
+}
+
+[data-theme="dark"] .prompt-template,
+[data-theme="dark"] .checkbox-group,
+[data-theme="dark"] .data-action {
+  background-color: var(--color-surface-darker);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .prompt-template:hover {
+  border-color: var(--color-border-light);
+}
+
+[data-theme="dark"] .range-value {
+  background-color: var(--color-surface-darker);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .form-file::-webkit-file-upload-button {
+  background-color: var(--color-surface-darker);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .form-file::-webkit-file-upload-button:hover {
+  background-color: var(--color-border);
+}
+
+[data-theme="dark"] .danger-zone {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Dark theme transitions */
+[data-theme="dark"] * {
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Dark theme scrollbars */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--color-surface-darker);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 5px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-light);
+}
+
+[data-theme="dark"] .popup-main::-webkit-scrollbar-thumb,
+[data-theme="dark"] .result-content::-webkit-scrollbar-thumb,
+[data-theme="dark"] .history-list::-webkit-scrollbar-thumb,
+[data-theme="dark"] .error-message::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+}
+
+[data-theme="dark"] .popup-main::-webkit-scrollbar-track,
+[data-theme="dark"] .result-content::-webkit-scrollbar-track,
+[data-theme="dark"] .history-list::-webkit-scrollbar-track,
+[data-theme="dark"] .error-message::-webkit-scrollbar-track {
+  background: transparent;
+}

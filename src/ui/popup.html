@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Copilot</title>
+  <link rel="stylesheet" href="../styles/popup.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <style>
+    /* Inline styles for popup-specific adjustments */
+    :root {
+      --popup-width: 400px;
+      --popup-height: 500px;
+    }
+    
+    body {
+      width: var(--popup-width);
+      min-height: var(--popup-height);
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="header-content">
+        <h1 class="extension-title">
+          <span class="extension-icon">🤖</span>
+          Chrome Copilot
+        </h1>
+        <div class="status-indicator" id="statusIndicator">
+          <span class="status-dot"></span>
+          <span class="status-text" id="statusText">Checking connection...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="popup-main">
+      <!-- Result View -->
+      <div id="resultView" class="view hidden">
+        <div class="result-header">
+          <h2>Explanation</h2>
+          <div class="result-actions">
+            <button id="copyResult" class="btn btn-small btn-secondary">
+              <span class="btn-icon">📋</span> Copy
+            </button>
+            <button id="clearResult" class="btn btn-small btn-secondary">
+              <span class="btn-icon">🗑️</span> Clear
+            </button>
+          </div>
+        </div>
+        <div class="result-content" id="lastResult">
+          <!-- LLM response will be inserted here -->
+        </div>
+        <div class="result-metadata" id="resultMetadata">
+          <!-- Metadata will be inserted here -->
+        </div>
+      </div>
+
+      <!-- Config View (Default) -->
+      <div id="configView" class="view">
+        <!-- Quick Settings -->
+        <section class="quick-config section">
+          <h2>Quick Settings</h2>
+          <div class="form-group">
+            <label for="quickModel">Model:</label>
+            <select id="quickModel" class="form-select">
+              <option value="">Loading models...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="quickPrompt">Prompt Template:</label>
+            <select id="quickPrompt" class="form-select">
+              <option value="">Loading prompts...</option>
+            </select>
+          </div>
+          <button id="openSettings" class="btn btn-secondary btn-full">
+            <span class="btn-icon">⚙️</span> Open Full Settings
+          </button>
+        </section>
+
+        <!-- Recent History -->
+        <section class="history-section section">
+          <div class="section-header">
+            <h2>Recent Queries</h2>
+            <button id="clearHistory" class="btn btn-small btn-text">
+              Clear All
+            </button>
+          </div>
+          <div id="historyList" class="history-list">
+            <!-- History items will be populated here -->
+            <div class="empty-state">
+              <p>No recent queries yet.</p>
+              <p>Select text and right-click to get started!</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Loading View -->
+      <div id="loadingView" class="view hidden">
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <h2>Processing your request...</h2>
+          <p id="loadingText">Sending to AI for explanation</p>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error View -->
+      <div id="errorView" class="view hidden">
+        <div class="error-state">
+          <div class="error-icon">⚠️</div>
+          <h2>Something went wrong</h2>
+          <div class="error-message" id="errorMessage">
+            <!-- Error message will be inserted here -->
+          </div>
+          <div class="error-actions">
+            <button id="retryBtn" class="btn btn-primary">
+              <span class="btn-icon">🔄</span> Retry
+            </button>
+            <button id="openSettingsFromError" class="btn btn-secondary">
+              <span class="btn-icon">⚙️</span> Check Settings
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <button id="testSelection" class="btn btn-primary btn-full">
+        <span class="btn-icon">🧪</span> Test with Current Selection
+      </button>
+      <p class="footer-hint">
+        💡 Select text on any page and right-click for quick access
+      </p>
+      <div class="footer-links">
+        <a href="#" id="viewAllHistory" class="footer-link">View All History</a>
+        <span class="separator">•</span>
+        <a href="#" id="reportIssue" class="footer-link">Report Issue</a>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
