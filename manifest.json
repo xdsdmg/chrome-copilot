@@ -3,6 +3,7 @@
   "name": "Chrome Copilot",
   "version": "1.0.0",
   "description": "AI-powered text explanation tool",
+  "minimum_chrome_version": "92",
   "permissions": [
     "contextMenus",
     "storage",
@@ -15,12 +16,14 @@
     "https://api.anthropic.com/*"
   ],
   "background": {
-    "service_worker": "src/background/background.js"
+    "service_worker": "src/background/background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["src/content/content.js"],
+      "type": "module",
       "run_at": "document_idle"
     }
   ],
