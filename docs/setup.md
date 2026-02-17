@@ -24,7 +24,7 @@ The extension requires the following permissions:
 - **Active tab**: To access content of current webpage
 - **Scripting**: To interact with webpage content
 - **Side panel**: For optional side panel display
-- **Host permissions**: For API endpoints (api.openai.com, api.anthropic.com)
+- **Host permissions**: For API endpoints (api.openai.com, api.anthropic.com, api.deepseek.com)
 
 ## Installation Methods
 
@@ -90,6 +90,7 @@ cd chrome-copilot
 2. Select your preferred provider:
    - **OpenAI** (Recommended for most users)
    - **Anthropic** (Claude models)
+   - **DeepSeek** (DeepSeek models)
    - **Custom API** (Self-hosted or alternative APIs)
 
 #### OpenAI Configuration
@@ -108,6 +109,14 @@ cd chrome-copilot
    - `claude-3-sonnet-20240229` (Balanced)
    - `claude-3-haiku-20240307` (Fast, cost-effective)
 3. **Endpoint**: Leave as default (`https://api.anthropic.com/v1/messages`)
+
+#### DeepSeek Configuration
+1. **API Key**: Obtain from [DeepSeek Platform](https://platform.deepseek.com/api-keys)
+2. **Model**: Select from available models:
+   - `deepseek-chat` (General purpose chat model)
+   - `deepseek-coder` (Optimized for programming tasks)
+   - `deepseek-reasoner` (Enhanced reasoning capabilities)
+3. **Endpoint**: Leave as default (`https://api.deepseek.com/v1/chat/completions`)
 
 #### Custom API Configuration
 1. **API Key**: Your custom API key (if required)

@@ -616,6 +616,9 @@ class OptionsController {
       case 'anthropic':
         helpUrl = 'https://console.anthropic.com/settings/keys';
         break;
+      case 'deepseek':
+        helpUrl = 'https://platform.deepseek.com/api-keys';
+        break;
       default:
         helpUrl = 'https://github.com/yourusername/chrome-copilot#api-key-setup';
     }

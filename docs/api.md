@@ -142,6 +142,12 @@ The LLMAPI class delegates to provider-specific implementations:
 - **Authentication**: `x-api-key` header
 - **Request Format**: Anthropic Messages API format
 
+##### DeepSeek Provider (`src/api/providers/deepseek.js`)
+- **Endpoint**: `https://api.deepseek.com/v1/chat/completions`
+- **Models Supported**: `deepseek-chat`, `deepseek-coder`, `deepseek-reasoner`
+- **Authentication**: Bearer token in Authorization header
+- **Request Format**: OpenAI ChatCompletion API format (compatible)
+
 ##### Custom Provider (`src/api/providers/custom.js`)
 - **Endpoint**: Configurable via settings
 - **Models Supported**: `custom` (configurable)
@@ -417,6 +423,11 @@ export const PROVIDERS = [
     value: 'anthropic',
     label: 'Anthropic',
     models: ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307']
+  },
+  {
+    value: 'deepseek',
+    label: 'DeepSeek',
+    models: ['deepseek-chat', 'deepseek-coder', 'deepseek-reasoner']
   },
   {
     value: 'custom',

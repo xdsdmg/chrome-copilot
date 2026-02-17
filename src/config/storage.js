@@ -268,6 +268,7 @@ export class Storage {
           // Mask API keys in export
           apiKey_openai: localData.apiKey_openai ? '[REDACTED]' : undefined,
           apiKey_anthropic: localData.apiKey_anthropic ? '[REDACTED]' : undefined,
+          apiKey_deepseek: localData.apiKey_deepseek ? '[REDACTED]' : undefined,
           apiKey_custom: localData.apiKey_custom ? '[REDACTED]' : undefined
         }
       };

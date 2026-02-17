@@ -9,7 +9,7 @@ import { PROVIDERS, DEFAULT_CONFIG } from '../core/constants.js';
 export class Validation {
   /**
    * Validate API key format (basic checks)
-   * @param {string} provider - Provider name ('openai', 'anthropic', 'custom')
+   * @param {string} provider - Provider name ('openai', 'anthropic', 'deepseek', 'custom')
    * @param {string} apiKey - API key to validate
    * @returns {boolean} True if API key appears valid
    */
@@ -33,6 +33,10 @@ export class Validation {
       case 'anthropic':
         // Anthropic keys typically start with 'sk-ant-' and are longer
         return trimmedKey.startsWith('sk-ant-') && trimmedKey.length >= 40;
+        
+      case 'deepseek':
+        // DeepSeek keys typically start with 'sk-' (similar to OpenAI)
+        return trimmedKey.startsWith('sk-') && trimmedKey.length >= 40;
         
       case 'custom':
         // Custom API keys - minimal validation

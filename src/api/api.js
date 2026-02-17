@@ -10,6 +10,7 @@ import { Storage } from '../config/storage.js';
 import { applyPromptTemplate } from './prompts.js';
 import { OpenAIProvider } from './providers/openai.js';
 import { AnthropicProvider } from './providers/anthropic.js';
+import { DeepSeekProvider } from './providers/deepseek.js';
 import { CustomProvider } from './providers/custom.js';
 
 /**
@@ -70,6 +71,15 @@ export class LLMAPI {
           
         case 'anthropic':
           result = await AnthropicProvider.call(
+            apiKey,
+            prompt,
+            model,
+            requestOptions
+          );
+          break;
+          
+        case 'deepseek':
+          result = await DeepSeekProvider.call(
             apiKey,
             prompt,
             model,
@@ -157,6 +167,15 @@ export class LLMAPI {
           );
           break;
           
+        case 'deepseek':
+          result = await DeepSeekProvider.call(
+            apiKey,
+            testPrompt,
+            model || 'deepseek-chat',
+            { maxTokens: 10 }
+          );
+          break;
+          
         case 'custom':
           if (!endpoint) {
             throw new Error('Endpoint is required for custom provider');
@@ -213,6 +232,13 @@ export class LLMAPI {
           'claude-3-haiku-20240307'
         ];
         
+      case 'deepseek':
+        return [
+          'deepseek-chat',
+          'deepseek-coder',
+          'deepseek-reasoner'
+        ];
+        
       case 'custom':
         return ['custom'];
         
@@ -243,6 +269,14 @@ export class LLMAPI {
         supportsImages: true,
         pricing: 'Per token',
         website: 'https://anthropic.com'
+      },
+      deepseek: {
+        name: 'DeepSeek',
+        supportsStreaming: true,
+        maxTokens: 4096,
+        supportsImages: false,
+        pricing: 'Per token',
+        website: 'https://deepseek.com'
       },
       custom: {
         name: 'Custom API',
@@ -285,6 +319,11 @@ export class LLMAPI {
         'claude-3-opus-20240229': { input: 0.015, output: 0.075 },
         'claude-3-sonnet-20240229': { input: 0.003, output: 0.015 },
         'claude-3-haiku-20240307': { input: 0.00025, output: 0.00125 }
+      },
+      deepseek: {
+        'deepseek-chat': { input: 0.0014, output: 0.0028 },
+        'deepseek-coder': { input: 0.0014, output: 0.0028 },
+        'deepseek-reasoner': { input: 0.0014, output: 0.0028 }
       }
     };
     
