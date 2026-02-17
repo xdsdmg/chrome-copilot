@@ -143,15 +143,16 @@ class PopupController {
       
       const statusIndicator = document.getElementById('statusIndicator');
       const statusText = document.getElementById('statusText');
+      const providerLabel = config.provider.charAt(0).toUpperCase() + config.provider.slice(1);
+      
+      statusIndicator.className = 'status-indicator';
       
       if (apiKey) {
-        statusIndicator.classList.add('connected');
-        statusIndicator.classList.remove('disconnected');
-        statusText.textContent = `Connected to ${config.provider}`;
+        statusIndicator.classList.add('status-connected');
+        statusText.textContent = `Connected to ${providerLabel}`;
       } else {
-        statusIndicator.classList.add('disconnected');
-        statusIndicator.classList.remove('connected');
-        statusText.textContent = 'API key not configured';
+        statusIndicator.classList.add('status-disconnected');
+        statusText.textContent = `${providerLabel} API key needed`;
       }
       
     } catch (error) {
@@ -404,6 +405,15 @@ class PopupController {
     
     const errorElement = document.getElementById('errorMessage');
     errorElement.textContent = message;
+    
+    // Show/hide settings button based on error type
+    const settingsBtn = document.getElementById('openSettingsFromError');
+    if (message.includes('API key') || message.includes('configured')) {
+      settingsBtn.classList.remove('hidden');
+      settingsBtn.textContent = '⚙️ Open Settings to Add Key';
+    } else {
+      settingsBtn.textContent = '⚙️ Check Settings';
+    }
   }
   
   /**

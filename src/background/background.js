@@ -92,7 +92,8 @@ async function processSelection(selectionData, tab) {
     const apiKey = await Storage.getApiKey(config.provider);
     
     if (!apiKey) {
-      throw new Error('API key not configured');
+      const providerLabel = config.provider.charAt(0).toUpperCase() + config.provider.slice(1);
+      throw new Error(`${providerLabel} API key not configured. Please open extension settings and add your API key.`);
     }
     
     // Process text with LLM
@@ -110,7 +111,8 @@ async function processSelection(selectionData, tab) {
         context: selectionData.context,
         timestamp: new Date().toISOString()
       },
-      processing: false
+      processing: false,
+      lastError: null
     });
     
     // Save to history if enabled
@@ -130,14 +132,30 @@ async function processSelection(selectionData, tab) {
   } catch (error) {
     console.error('Error processing selection:', error);
     
+    // Create detailed error message
+    let errorMessage = error.message;
+    if (error.message.includes('API key not configured')) {
+      errorMessage = error.message;
+    } else if (error.message.includes('Invalid API key') || error.message.includes('authentication')) {
+      errorMessage = 'Invalid API key. Please check your API key in extension settings.';
+    } else if (error.message.includes('Network error') || error.message.includes('fetch')) {
+      errorMessage = 'Network error. Please check your internet connection.';
+    } else if (error.message.includes('Rate limit')) {
+      errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
+    }
+    
     // Store error state
     await chrome.storage.local.set({ 
-      lastError: error.message,
+      lastError: errorMessage,
       processing: false
     });
     
     // Show error in popup
-    await chrome.action.openPopup();
+    try {
+      await chrome.action.openPopup();
+    } catch (popupError) {
+      console.error('Could not open popup:', popupError);
+    }
   }
 }
 

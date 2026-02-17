@@ -105,9 +105,10 @@ class OptionsController {
   setupFormElements() {
     // Provider dropdown change handler
     const providerSelect = document.getElementById('provider');
-    providerSelect.addEventListener('change', () => {
+    providerSelect.addEventListener('change', async () => {
       this.updateModelOptions();
       this.toggleEndpointField();
+      await this.loadApiKey();
       this.markUnsavedChanges();
     });
     
@@ -324,9 +325,20 @@ class OptionsController {
   async loadApiKey() {
     const providerSelect = document.getElementById('provider');
     const apiKeyInput = document.getElementById('apiKey');
+    const apiKeyHint = document.getElementById('apiKeyHint');
     
     const apiKey = await Storage.getApiKey(providerSelect.value);
     apiKeyInput.value = apiKey || '';
+    
+    if (apiKeyHint) {
+      if (!apiKey) {
+        apiKeyHint.textContent = `No API key configured for ${providerSelect.options[providerSelect.selectedIndex].text}. Please enter your API key.`;
+        apiKeyHint.style.color = 'var(--color-warning)';
+      } else {
+        apiKeyHint.textContent = 'API key configured. Click the eye icon to view.';
+        apiKeyHint.style.color = 'var(--color-success)';
+      }
+    }
   }
   
   /**
@@ -530,56 +542,38 @@ class OptionsController {
       const testBtn = document.getElementById('testConnection');
       const testResult = document.getElementById('testResult');
       
-      // Show testing state
       testBtn.disabled = true;
       testBtn.innerHTML = '<span class="btn-icon">⏳</span> Testing...';
       testResult.classList.add('hidden');
       
-      // Get current configuration
       const provider = document.getElementById('provider').value;
       const apiKey = document.getElementById('apiKey').value.trim();
       const model = document.getElementById('model').value;
+      const endpoint = document.getElementById('endpoint').value.trim();
       
       if (!apiKey) {
         throw new Error('Please enter an API key first');
       }
       
-      // Save API key temporarily for test
-      const originalApiKey = await Storage.getApiKey(provider);
-      await Storage.saveApiKey(provider, apiKey);
+      const result = await LLMAPI.testConnection(provider, apiKey, model, endpoint);
       
-      try {
-        // Test with a simple request
-        const config = await Storage.loadConfig();
-        const testText = 'Hello, world!';
-        const testContext = {
-          title: 'Test Page',
-          url: 'https://example.com',
-          timestamp: new Date().toISOString()
-        };
-        
-        const result = await LLMAPI.processText(testText, testContext, {
-          promptTemplate: 'Respond with "Test successful" only: {text}',
-          maxTokens: 10
-        });
-        
-        // Show success
+      if (result.success) {
         testResult.innerHTML = `
           <div class="test-success">
             <strong>✓ Connection successful!</strong>
-            <p>API responded: "${result.trim()}"</p>
+            <p>API responded: "${this.escapeHtml(result.response?.trim() || 'OK')}"</p>
           </div>
         `;
-        testResult.classList.remove('hidden');
-        
-      } finally {
-        // Restore original API key
-        if (originalApiKey) {
-          await Storage.saveApiKey(provider, originalApiKey);
-        } else {
-          await Storage.deleteApiKey(provider);
-        }
+      } else {
+        testResult.innerHTML = `
+          <div class="test-error">
+            <strong>✗ Connection failed</strong>
+            <p>${this.escapeHtml(result.message)}</p>
+            <p>Please check your API key and configuration.</p>
+          </div>
+        `;
       }
+      testResult.classList.remove('hidden');
       
     } catch (error) {
       console.error('Connection test failed:', error);
@@ -588,14 +582,12 @@ class OptionsController {
       testResult.innerHTML = `
         <div class="test-error">
           <strong>✗ Connection failed</strong>
-          <p>${error.message}</p>
-          <p>Please check your API key and configuration.</p>
+          <p>${this.escapeHtml(error.message)}</p>
         </div>
       `;
       testResult.classList.remove('hidden');
       
     } finally {
-      // Reset button state
       const testBtn = document.getElementById('testConnection');
       testBtn.disabled = false;
       testBtn.innerHTML = '<span class="btn-icon">🔍</span> Test Connection';
