@@ -30,10 +30,11 @@
   --color-border-light: #4b5563;
   --color-border-dark: #6b7280;
   
-  /* Adjusted primary colors for better visibility on dark */
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
-  --color-primary-light: #60a5fa;
+  /* Adjusted primary colors for better visibility on dark - using indigo/purple theme */
+  --color-primary: #818cf8;
+  --color-primary-dark: #6366f1;
+  --color-primary-light: #a5b4fc;
+  --color-primary-gradient: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
 }
 
 /* Dark theme specific component styles */
@@ -85,7 +86,7 @@
 }
 
 [data-theme="dark"] .sidebar {
-  background: linear-gradient(135deg, var(--color-surface-darker) 0%, #1e293b 100%);
+  background: var(--color-primary-gradient);
 }
 
 [data-theme="dark"] .prompt-template,

@@ -29,6 +29,9 @@
   --color-border: #e5e7eb;
   --color-border-light: #f3f4f6;
   --color-border-dark: #d1d5db;
+  
+  /* Primary gradient for light theme */
+  --color-primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
 }
 
 /* Light theme specific component styles */

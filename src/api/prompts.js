@@ -64,7 +64,7 @@ export function applyPromptTemplate(template, variables) {
   
   // First pass: replace all known variables
   Object.entries(variableMap).forEach(([variable, value]) => {
-    const regex = new RegExp(this.escapeRegExp(variable), 'g');
+    const regex = new RegExp(escapeRegExp(variable), 'g');
     processed = processed.replace(regex, value);
   });
   

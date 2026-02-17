@@ -3,41 +3,45 @@
  * Shared styles across all extension components
  */
 
-:root {
-  /* Color Palette - Light Theme (default) */
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
-  --color-primary-light: #3b82f6;
-  --color-secondary: #6b7280;
-  --color-secondary-dark: #4b5563;
-  --color-secondary-light: #9ca3af;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
-  
-  /* Background & Surface Colors */
-  --color-background: #ffffff;
-  --color-surface: #f9fafb;
-  --color-surface-dark: #f3f4f6;
-  --color-surface-darker: #e5e7eb;
-  
-  /* Text Colors */
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-tertiary: #9ca3af;
-  --color-text-inverse: #ffffff;
-  
-  /* Border & Divider Colors */
-  --color-border: #d1d5db;
-  --color-border-light: #e5e7eb;
-  --color-border-dark: #9ca3af;
-  
-  /* Shadow & Elevation */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+ :root {
+   /* Color Palette - Light Theme (default) - Enhanced Elegance */
+   --color-primary: #4f46e5;
+   --color-primary-dark: #4338ca;
+   --color-primary-light: #6366f1;
+   --color-primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+   --color-secondary: #7c3aed;
+   --color-secondary-dark: #6d28d9;
+   --color-secondary-light: #8b5cf6;
+   --color-success: #10b981;
+   --color-warning: #f59e0b;
+   --color-danger: #ef4444;
+   --color-info: #3b82f6;
+   
+   /* Background & Surface Colors - Softer tones */
+   --color-background: #fafafa;
+   --color-surface: #ffffff;
+   --color-surface-dark: #f8fafc;
+   --color-surface-darker: #f1f5f9;
+   
+   /* Text Colors - Better contrast and readability */
+   --color-text-primary: #1e293b;
+   --color-text-secondary: #64748b;
+   --color-text-tertiary: #94a3b8;
+   --color-text-inverse: #ffffff;
+   --color-text-on-gradient: #ffffff;
+   
+   /* Border & Divider Colors - Subtler borders */
+   --color-border: #e2e8f0;
+   --color-border-light: #f1f5f9;
+   --color-border-dark: #cbd5e1;
+   --color-border-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+   
+   /* Shadow & Elevation - Softer, more refined shadows */
+   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+   --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.04);
   
   /* Spacing Scale */
   --space-0: 0;
@@ -88,32 +92,41 @@
   --z-tooltip: 1070;
 }
 
-/* Dark Theme Variables */
+/* Dark Theme Variables - Elegant dark mode */
 [data-theme="dark"] {
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
-  --color-primary-light: #60a5fa;
-  --color-secondary: #9ca3af;
-  --color-secondary-dark: #6b7280;
-  --color-secondary-light: #d1d5db;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
+  --color-primary: #818cf8;
+  --color-primary-dark: #6366f1;
+  --color-primary-light: #a5b4fc;
+  --color-primary-gradient: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+  --color-secondary: #a78bfa;
+  --color-secondary-dark: #8b5cf6;
+  --color-secondary-light: #c4b5fd;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-danger: #f87171;
+  --color-info: #60a5fa;
   
-  --color-background: #111827;
-  --color-surface: #1f2937;
-  --color-surface-dark: #374151;
-  --color-surface-darker: #4b5563;
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-dark: #334155;
+  --color-surface-darker: #475569;
   
-  --color-text-primary: #f9fafb;
-  --color-text-secondary: #d1d5db;
-  --color-text-tertiary: #9ca3af;
-  --color-text-inverse: #111827;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+  --color-text-inverse: #0f172a;
+  --color-text-on-gradient: #ffffff;
   
-  --color-border: #4b5563;
-  --color-border-light: #374151;
-  --color-border-dark: #6b7280;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-border-dark: #475569;
+  --color-border-gradient: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+  
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.25), 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.15);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.15);
 }
 
 /* Base Styles */
@@ -130,6 +143,12 @@ body {
   color: var(--color-text-primary);
   background-color: var(--color-background);
   transition: background-color var(--transition-normal), color var(--transition-normal);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Typography */
@@ -367,7 +386,8 @@ a:hover {
 .form-textarea:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  transform: translateY(-1px);
 }
 
 .form-input::placeholder,
@@ -418,20 +438,40 @@ a:hover {
   font-family: var(--font-family);
   line-height: 1.5;
   color: var(--color-text-inverse);
-  background-color: var(--color-primary);
+  background: var(--color-primary-gradient);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+  transition: all var(--transition-fast), transform var(--transition-fast);
   user-select: none;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-primary);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: -1;
 }
 
 .btn:hover {
-  background-color: var(--color-primary-dark);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:hover::before {
+  opacity: 1;
 }
 
 .btn:active {
@@ -440,7 +480,7 @@ a:hover {
 
 .btn:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
 }
 
 .btn:disabled {
@@ -450,12 +490,14 @@ a:hover {
 }
 
 .btn-secondary {
-  background-color: var(--color-secondary);
+  background: var(--color-secondary);
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-light) 100%);
   color: var(--color-text-inverse);
 }
 
 .btn-secondary:hover {
-  background-color: var(--color-secondary-dark);
+  background: var(--color-secondary-dark);
+  background: linear-gradient(135deg, var(--color-secondary-dark) 0%, var(--color-secondary) 100%);
 }
 
 .btn-danger {
@@ -533,6 +575,16 @@ a:hover {
   50% { opacity: 0.5; }
 }
 
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
 /* Card-like Containers */
 .card {
   background-color: var(--color-surface);
@@ -540,12 +592,14 @@ a:hover {
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+  transition: all var(--transition-normal);
+  animation: scaleIn 0.3s ease-out;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: var(--color-primary-light);
 }
 
 /* Loading Spinner */
