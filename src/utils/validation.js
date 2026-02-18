@@ -35,8 +35,7 @@ export class Validation {
         return trimmedKey.startsWith('sk-ant-') && trimmedKey.length >= 40;
         
       case 'deepseek':
-        // DeepSeek keys typically start with 'sk-' (similar to OpenAI)
-        return trimmedKey.startsWith('sk-') && trimmedKey.length >= 40;
+        return trimmedKey.length >= 10;
         
       case 'custom':
         // Custom API keys - minimal validation

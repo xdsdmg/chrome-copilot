@@ -34,46 +34,37 @@ class PopupController {
    */
   async init() {
     try {
-      // Get current state from background script
       await this.loadCurrentState();
-      
-      // Set up event listeners
       this.setupEventListeners();
-      
-      // Update UI based on current state
       await this.updateStatus();
       await this.loadQuickSettings();
       await this.loadHistory();
-      
-      // Show appropriate view based on state
       this.determineInitialView();
-      
     } catch (error) {
       console.error('Failed to initialize popup:', error);
-      this.showError('Failed to load extension data. Please try again.');
+      this.showError(`Failed to load extension data: ${error.message}`);
     }
   }
   
-  /**
-   * Load current state from background script storage
-   */
   async loadCurrentState() {
     try {
       const response = await chrome.runtime.sendMessage({
         action: ACTION_TYPES.GET_SELECTION
       });
       
-      if (response.error) {
-        throw new Error(response.error);
+      if (response && response.error) {
+        console.warn('Error from background:', response.error);
       }
       
-      this.currentResult = response.lastResult || null;
-      this.currentError = response.lastError || null;
-      this.isProcessing = response.processing || false;
+      this.currentResult = response?.lastResult || null;
+      this.currentError = response?.lastError || null;
+      this.isProcessing = response?.processing || false;
       
     } catch (error) {
       console.debug('Could not load current state:', error);
-      // Continue with default state
+      this.currentResult = null;
+      this.currentError = null;
+      this.isProcessing = false;
     }
   }
   

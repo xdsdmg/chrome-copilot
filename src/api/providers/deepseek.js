@@ -120,13 +120,8 @@ export class DeepSeekProvider {
    * Validate API inputs
    */
   static validateInputs(apiKey, prompt, model) {
-    if (!apiKey || typeof apiKey !== 'string') {
+    if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length === 0) {
       throw new Error('Invalid DeepSeek API key');
-    }
-    
-    // DeepSeek API keys typically start with 'sk-'
-    if (!apiKey.startsWith('sk-')) {
-      throw new Error('Invalid DeepSeek API key format. API keys should start with "sk-"');
     }
     
     if (!prompt || typeof prompt !== 'string') {
@@ -137,7 +132,6 @@ export class DeepSeekProvider {
       throw new Error('Invalid model');
     }
     
-    // Validate prompt length (rough token estimate)
     const estimatedTokens = prompt.length / 4;
     if (estimatedTokens > this.MAX_TOKENS) {
       throw new Error(`Prompt too long. Estimated tokens: ${Math.round(estimatedTokens)}, max: ${this.MAX_TOKENS}`);

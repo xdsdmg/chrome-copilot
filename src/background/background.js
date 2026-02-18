@@ -8,15 +8,10 @@
 import { ACTION_TYPES } from '../core/constants.js';
 import { Storage } from '../config/storage.js';
 import { LLMAPI } from '../api/api.js';
-import { Display } from '../display/display.js';
 
-/**
- * Initialize the extension on install
- */
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Chrome Copilot extension installed');
   
-  // Create context menu item
   chrome.contextMenus.create({
     id: 'chrome-copilot',
     title: 'Chrome Copilot',
@@ -24,12 +19,18 @@ chrome.runtime.onInstalled.addListener(() => {
     visible: true
   });
   
-  // Set up default configuration if not exists
   Storage.loadConfig().then(config => {
     if (!config) {
       Storage.saveConfig({}).catch(console.error);
     }
   }).catch(console.error);
+  
+  updateExtensionStatus();
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  console.log('Chrome Copilot extension started');
+  updateExtensionStatus();
 });
 
 /**
@@ -205,20 +206,22 @@ async function displayResult(result, metadata, displayLocation, tab) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.action) {
     case ACTION_TYPES.GET_SELECTION:
-      // Get current selection from storage
-      chrome.storage.local.get(['lastSelection', 'lastResult', 'lastError'])
+      chrome.storage.local.get(['lastSelection', 'lastResult', 'lastError', 'processing'])
         .then(data => sendResponse(data))
-        .catch(error => sendResponse({ error: error.message }));
-      return true; // Keep message channel open for async response
+        .catch(error => {
+          console.error('Error getting selection:', error);
+          sendResponse({ error: error.message });
+        });
+      return true;
       
     case ACTION_TYPES.UPDATE_STATUS:
-      // Update extension badge or status
       updateExtensionStatus();
       sendResponse({ success: true });
-      break;
+      return false;
       
     default:
       sendResponse({ error: 'Unknown action' });
+      return false;
   }
 });
 
