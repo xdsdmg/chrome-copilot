@@ -145,10 +145,10 @@ async function processSelection(selectionData, tab) {
       errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
     }
     
-    // Store error state
     await chrome.storage.local.set({ 
       lastError: errorMessage,
-      processing: false
+      processing: false,
+      lastResult: null
     });
     
     // Show error in popup

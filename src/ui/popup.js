@@ -359,26 +359,23 @@ class PopupController {
     this.currentResult = { result, metadata };
     this.currentError = null;
     
-    // Update UI
     this.showView('result');
     
-    // Format and display result
     const resultElement = document.getElementById('lastResult');
     resultElement.innerHTML = Display.formatResult(result);
     
-    // Show metadata
+    const context = metadata?.context || {};
     const metadataElement = document.getElementById('resultMetadata');
     metadataElement.innerHTML = `
       <div class="metadata-item">
-        <strong>Source:</strong> ${metadata.context.title || 'Unknown'}
+        <strong>Source:</strong> ${context.title || 'Unknown'}
       </div>
       <div class="metadata-item">
-        <strong>Time:</strong> ${new Date(metadata.context.timestamp).toLocaleTimeString()}
+        <strong>Time:</strong> ${context.timestamp ? new Date(context.timestamp).toLocaleTimeString() : 'Unknown'}
       </div>
     `;
     
-    // Auto-copy if enabled
-    const config = Storage.loadConfig().then(config => {
+    Storage.loadConfig().then(config => {
       if (config.autoCopy) {
         Display.copyToClipboard(result);
       }
@@ -447,7 +444,11 @@ class PopupController {
     } else if (this.currentError) {
       this.showError(this.currentError);
     } else if (this.currentResult) {
-      this.showResult(this.currentResult.result, this.currentResult.metadata);
+      const metadata = {
+        text: this.currentResult.text,
+        context: this.currentResult.context || {}
+      };
+      this.showResult(this.currentResult.result, metadata);
     } else {
       this.showView('config');
     }
@@ -457,11 +458,13 @@ class PopupController {
    * Helper methods
    */
   truncateText(text, maxLength) {
+    if (!text) return '';
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   }
   
   formatTime(timestamp) {
+    if (!timestamp) return 'Unknown';
     const date = new Date(timestamp);
     const now = new Date();
     const diff = now - date;
@@ -522,13 +525,23 @@ class PopupController {
   }
   
   reRunQuery(historyItem) {
-    this.processSelection(historyItem.text, historyItem.context);
+    const context = historyItem.context || {
+      title: 'Unknown',
+      url: 'Unknown',
+      timestamp: new Date().toISOString()
+    };
+    this.processSelection(historyItem.text, context);
   }
   
   showHistoryResult(historyItem) {
+    const context = historyItem.context || {
+      title: 'Unknown',
+      url: 'Unknown',
+      timestamp: historyItem.timestamp || new Date().toISOString()
+    };
     this.showResult(historyItem.result, {
       text: historyItem.text,
-      context: historyItem.context
+      context: context
     });
   }
   
